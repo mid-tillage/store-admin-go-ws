@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: store-engine-configmap
+data:
+  STORE_ENGINE_ORCHESTRATOR_IP: "store-engine-orchestrator-service"
+  STORE_ENGINE_ORCHESTRATOR_PORT: "2500"
+  STORE_ENGINE_PERSISTENCE_IP: "store-engine-persistence-service"
+  STORE_ENGINE_PERSISTENCE_PORT: "2999"
+  #STORE_ENGINE_SANITIZER_IP: "store-engine-sanitizer-service"
+  #STORE_ENGINE_SANITIZER_PORT: "3001"
+  STORE_ENGINE_DTO_VALIDATOR_IP: "store-engine-dto-validator-service"
+  STORE_ENGINE_DTO_VALIDATOR_PORT: "3002"
+  #STORE_ENGINE_TRANSFORMER_IP: "store-engine-transformer-service"
+  #STORE_ENGINE_TRANSFORMER_PORT: "3003"
+  #STORE_ENGINE_WORKFLOW_SERIALIZER_IP: "store-engine-workflow-serializer-service"
+  #STORE_ENGINE_WORKFLOW_SERIALIZER_PORT: "3004"
+  #STORE_ENGINE_PRODUCT_MANAGEMENT_REGISTER_IP: "store-engine-product-management-register-service"
+  #STORE_ENGINE_PRODUCT_MANAGEMENT_REGISTER_PORT: "3005"
+  #STORE_ENGINE_LOADER_IP: "store-engine-loader-service"
+  #STORE_ENGINE_LOADER_PORT: "3006"

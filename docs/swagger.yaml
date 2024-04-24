@@ -1,0 +1,213 @@
+definitions:
+  controllers.ErrorResponse:
+    properties:
+      error:
+        type: string
+    type: object
+  controllers.SuccessResponse:
+    properties:
+      message:
+        type: string
+    type: object
+  models.Catalog:
+    properties:
+      idproductCatalog:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.Enterprise:
+    properties:
+      identerprise:
+        type: integer
+      name:
+        type: string
+    type: object
+  models.Product:
+    properties:
+      description:
+        type: string
+      enterprise:
+        $ref: '#/definitions/models.Enterprise'
+      name:
+        type: string
+    type: object
+  models.ProductOnSale:
+    properties:
+      catalog:
+        $ref: '#/definitions/models.Catalog'
+      idproductOnSale:
+        type: integer
+      price:
+        type: number
+      product:
+        $ref: '#/definitions/models.Product'
+      saleEndDatetime:
+        type: string
+      saleStartDatetime:
+        type: string
+      title:
+        type: string
+    type: object
+externalDocs:
+  description: OpenAPI
+  url: https://swagger.io/resources/open-api/
+host: localhost:3040
+info:
+  contact:
+    email: ripioconarcilla@gmail.com
+    name: Mid-Tillage
+    url: https://github.com/mid-tillage/store-admin-go-ws
+  description: This is a store admin WS sample server.
+  license:
+    name: '-'
+    url: '-'
+  termsOfService: '-'
+  title: store-admin-go-ws API
+  version: "1.0"
+paths:
+  /product-on-sale:
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a list of all products on sale.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.ProductOnSale'
+            type: array
+      summary: Get all products on sale
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Creates a new product on sale.
+      parameters:
+      - description: Product Object
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductOnSale'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.ProductOnSale'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Create a new product on sale
+      tags:
+      - Products
+  /product-on-sale/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Deletes a product on sale by its ID.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.SuccessResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Delete a product on sale
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: Retrieves a product on sale by its ID.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductOnSale'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Get a product on sale by ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Updates a product on sale by its ID.
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated Product Object
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.ProductOnSale'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.ProductOnSale'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/controllers.ErrorResponse'
+      summary: Update a product on sale
+      tags:
+      - Products
+securityDefinitions:
+  BasicAuth:
+    type: basic
+swagger: "2.0"

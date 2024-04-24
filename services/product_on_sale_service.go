@@ -2,29 +2,33 @@
 package services
 
 import (
-	"net/http"
+	"errors"
 	"time"
 
-	"github.com/mid-tillage/store-admin-go-ws/models"
+	"example.com/store-admin-go-ws/models"
 )
 
-type ProductService struct {
+type ProductOnSaleService struct {
 	// Add any dependencies here...
 }
 
-var productsOnSale = []ProductOnSale{
+func NewProductOnSaleService() *ProductOnSaleService {
+	return &ProductOnSaleService{}
+}
+
+var productsOnSale = []models.ProductOnSale{
 	{
 		IDProductOnSale: 1,
 		Title:           "Product 1",
-		Product: Product{
+		Product: models.Product{
 			Name:        "Product 1",
 			Description: "Description 1",
-			Enterprise: Enterprise{
+			Enterprise: models.Enterprise{
 				IDEnterprise: 1,
 				Name:         "Enterprise 1",
 			},
 		},
-		Catalog: Catalog{
+		Catalog: models.Catalog{
 			IDProductCatalog: 1,
 			Name:             "Catalog 1",
 		},
@@ -35,15 +39,15 @@ var productsOnSale = []ProductOnSale{
 	{
 		IDProductOnSale: 2,
 		Title:           "Product 2",
-		Product: Product{
+		Product: models.Product{
 			Name:        "Product 2",
 			Description: "Description 2",
-			Enterprise: Enterprise{
+			Enterprise: models.Enterprise{
 				IDEnterprise: 2,
 				Name:         "Enterprise 2",
 			},
 		},
-		Catalog: Catalog{
+		Catalog: models.Catalog{
 			IDProductCatalog: 2,
 			Name:             "Catalog 2",
 		},
@@ -53,26 +57,73 @@ var productsOnSale = []ProductOnSale{
 	},
 }
 
-func NewProductService() *ProductService {
-	return &ProductService{}
+func (ps *ProductOnSaleService) GetProductOnSales() ([]models.ProductOnSale, error) {
+	return productsOnSale, nil
 }
 
-func (ps *ProductService) GetProductOnSales() ([]models.ProductOnSale, error) {
-	c.JSON(http.StatusOK, productsOnSale)
+func (ps *ProductOnSaleService) GetProductOnSaleByID(id int64) (*models.ProductOnSale, error) {
+	for _, p := range productsOnSale {
+		if p.IDProductOnSale == id {
+			return &p, nil
+		}
+	}
+	return nil, errors.New("product not found")
 }
 
-func (ps *ProductService) GetProductOnSaleByID(id int64) (*models.ProductOnSale, error) {
-	// Implementation...
+func (ps *ProductOnSaleService) PostProductOnSale(productOnSale *models.ProductOnSale) error {
+	// Assign a new ID to the product
+	productOnSale.IDProductOnSale = generateNextID()
+
+	// Add the new product to the list
+	productsOnSale = append(productsOnSale, *productOnSale)
+	return nil
 }
 
-func (ps *ProductService) PostProductOnSale(productOnSale *models.ProductOnSale) error {
-	// Implementation...
+func (ps *ProductOnSaleService) PutProductOnSale(id int64, updatedProductOnSale *models.ProductOnSale) error {
+	// Find the index of the product with the given ID
+	index := -1
+	for i, p := range productsOnSale {
+		if p.IDProductOnSale == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return errors.New("product not found")
+	}
+
+	// Update the product
+	productsOnSale[index] = *updatedProductOnSale
+	return nil
 }
 
-func (ps *ProductService) PutProductOnSale(id int64, updatedProductOnSale *models.ProductOnSale) error {
-	// Implementation...
+func (ps *ProductOnSaleService) DeleteProductOnSale(id int64) error {
+	index := -1
+	for i, p := range productsOnSale {
+		if p.IDProductOnSale == id {
+			index = i
+			break
+		}
+	}
+
+	if index == -1 {
+		return errors.New("product not found")
+	}
+
+	// Remove the product from the list
+	productsOnSale = append(productsOnSale[:index], productsOnSale[index+1:]...)
+	return nil
 }
 
-func (ps *ProductService) DeleteProductOnSale(id int64) error {
-	// Implementation...
+func generateNextID() int64 {
+	// Find the maximum ID currently in use
+	maxID := int64(0)
+	for _, p := range productsOnSale {
+		if p.IDProductOnSale > maxID {
+			maxID = p.IDProductOnSale
+		}
+	}
+	// Increment the maximum ID by 1 to get the next available ID
+	return maxID + 1
 }
