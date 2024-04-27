@@ -1,13 +1,13 @@
 package routers
 
 import (
-	"github.com/gin-gonic/gin"
-
 	"example.com/store-admin-go-ws/controllers"
+	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func SetupProductOnSaleRouter(router *gin.RouterGroup) {
-	productOnSaleController := controllers.NewProductOnSaleController()
+func SetupProductOnSaleRouter(router *gin.RouterGroup, db *gorm.DB) {
+	productOnSaleController := controllers.NewProductOnSaleController(db)
 
 	productOnSaleGroup := router.Group("/product-on-sale")
 	{

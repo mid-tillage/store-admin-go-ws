@@ -8,10 +8,12 @@ import (
 	"example.com/store-admin-go-ws/models"
 	"example.com/store-admin-go-ws/services"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type ProductOnSaleController struct {
 	productOnSaleService *services.ProductOnSaleService
+	db                   *gorm.DB
 }
 
 type ErrorResponse struct {
@@ -22,8 +24,14 @@ type SuccessResponse struct {
 	Message string `json:"message"`
 }
 
-func NewProductOnSaleController() *ProductOnSaleController {
-	return &ProductOnSaleController{}
+//	func NewProductOnSaleController() *ProductOnSaleController {
+//		return &ProductOnSaleController{}
+//	}
+func NewProductOnSaleController(db *gorm.DB) *ProductOnSaleController {
+	return &ProductOnSaleController{
+		productOnSaleService: services.NewProductOnSaleService(db), // Pass db to the service
+		db:                   db,                                   // Store db in the controller
+	}
 }
 
 // @Summary Get all products on sale

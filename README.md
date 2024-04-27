@@ -18,6 +18,8 @@ Store's Admin Web Service example using [Nest](https://github.com/nestjs/nest) f
 
 ```bash
 go get -u github.com/swaggo/swag/cmd/swag
+go get -u gorm.io/gorm
+go get gorm.io/driver/postgres
 $ go init
 ```
 

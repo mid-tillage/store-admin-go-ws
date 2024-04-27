@@ -1,11 +1,9 @@
+```go
 package services
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
 	"fmt"
-	"net/http"
 
 	"gorm.io/gorm"
 
@@ -13,15 +11,11 @@ import (
 )
 
 type ProductOnSaleService struct {
-	db         *gorm.DB
-	httpClient *http.Client
+	db *gorm.DB
 }
 
 func NewProductOnSaleService(db *gorm.DB) *ProductOnSaleService {
-	return &ProductOnSaleService{
-		db:         db,
-		httpClient: &http.Client{},
-	}
+	return &ProductOnSaleService{db: db}
 }
 
 func (ps *ProductOnSaleService) GetProductOnSales() ([]models.ProductOnSale, error) {
@@ -52,39 +46,8 @@ func (ps *ProductOnSaleService) GetProductOnSaleByID(id int64) (*models.ProductO
 	return &productOnSale, nil
 }
 
-// func (ps *ProductOnSaleService) PostProductOnSale(productOnSale *models.ProductOnSale) error {
-// 	return ps.db.Omit("Product").Omit("Catalog").Create(productOnSale).Error
-// }
-
 func (ps *ProductOnSaleService) PostProductOnSale(productOnSale *models.ProductOnSale) error {
-	// Marshal the product to JSON
-	requestBody, err := json.Marshal(map[string]interface{}{"sale": productOnSale})
-	if err != nil {
-		return fmt.Errorf("failed to marshal product to JSON: %v", err)
-	}
-
-	// Make HTTP POST request to the microservice
-	resp, err := http.Post("http://localhost:2500/product", "application/json", bytes.NewBuffer(requestBody))
-	if err != nil {
-		return fmt.Errorf("failed to make HTTP request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	// Log the response code
-	fmt.Printf("Response Code: %d\n", resp.StatusCode)
-
-	// Check response status code
-	if resp.StatusCode != http.StatusCreated {
-		return fmt.Errorf("unexpected status code: %d", resp.StatusCode)
-	}
-
-	// // Decode response body
-	// var responseProduct models.ProductOnSale
-	// if err := json.NewDecoder(resp.Body).Decode(&responseProduct); err != nil {
-	// 	return fmt.Errorf("failed to decode response body: %v", err)
-	// }
-
-	return nil
+	return ps.db.Omit("Product").Omit("Catalog").Create(productOnSale).Error
 }
 
 func (ps *ProductOnSaleService) PutProductOnSale(id int64, updatedProductOnSale *models.ProductOnSale) error {
@@ -106,3 +69,5 @@ func (ps *ProductOnSaleService) DeleteProductOnSale(id int64) error {
 	}
 	return nil
 }
+
+```
